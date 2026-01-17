@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doctor Dashboard</title>
+    <title>Doctor Dashboard - Kantan Care</title>
     <style>
         * {
             margin: 0;
@@ -26,19 +26,35 @@
             top: 0;
             z-index: 100;
         }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logo {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+        }
         .header h1 {
             font-size: 22px;
             color: #1a202c;
             font-weight: 700;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
         }
         .user-info {
             display: flex;
             align-items: center;
             gap: 16px;
             font-size: 14px;
+        }
+        .user-name {
             color: #4a5568;
             font-weight: 600;
         }
@@ -96,420 +112,298 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        .tabs {
-            background: white;
-            border-radius: 12px 12px 0 0;
-            display: flex;
-            gap: 4px;
-            padding: 8px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-        .tab {
-            padding: 12px 28px;
-            font-size: 15px;
-            font-weight: 600;
-            color: #718096;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: all 0.2s;
-        }
-        .tab:hover {
-            background: #f7fafc;
-            color: #4a5568;
-        }
-        .tab.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
         .section {
             background: white;
-            border-radius: 0 0 16px 16px;
-            padding: 32px;
+            border-radius: 16px;
+            padding: 28px;
             margin-bottom: 24px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
         .section-header {
-            margin-bottom: 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
         }
         .section-title {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 700;
             color: #1a202c;
-            margin-bottom: 8px;
         }
         .section-subtitle {
             font-size: 14px;
             color: #718096;
+            margin-top: 4px;
         }
-        .patient-card {
+        .appointment-card {
+            background: #f7fafc;
             border: 2px solid #e2e8f0;
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 20px;
-            transition: all 0.3s;
-            background: linear-gradient(to right, #ffffff 0%, #f7fafc 100%);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            transition: all 0.2s;
         }
-        .patient-card:hover {
+        .appointment-card:hover {
             border-color: #667eea;
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
-            transform: translateY(-2px);
+            background: white;
         }
-        .patient-header {
+        .appointment-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
             margin-bottom: 16px;
         }
-        .patient-name {
-            font-size: 20px;
+        .patient-info h3 {
+            font-size: 18px;
             font-weight: 700;
             color: #1a202c;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
         .patient-meta {
-            font-size: 14px;
+            font-size: 13px;
             color: #718096;
             margin-bottom: 4px;
         }
         .status-badge {
-            padding: 8px 16px;
+            padding: 6px 14px;
+            border-radius: 20px;
             font-size: 12px;
             font-weight: 700;
-            border-radius: 20px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .status-accepted {
-            color: #22c55e;
-            background: #dcfce7;
         }
         .status-pending {
-            color: #f59e0b;
             background: #fef3c7;
+            color: #92400e;
+        }
+        .status-confirmed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .status-completed {
+            background: #e0e7ff;
+            color: #3730a3;
         }
         .symptoms-preview {
-            background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%);
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
             padding: 16px;
+            margin-bottom: 16px;
+        }
+        .symptoms-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #4a5568;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .symptoms-text {
             font-size: 14px;
             color: #1a202c;
-            border-left: 4px solid #667eea;
-            margin-bottom: 16px;
-            border-radius: 8px;
-        }
-        .symptoms-preview strong {
-            color: #667eea;
+            line-height: 1.6;
         }
         .action-buttons {
             display: flex;
             gap: 12px;
+            flex-wrap: wrap;
         }
         .button-primary {
-            padding: 12px 24px;
+            padding: 10px 20px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 8px;
             font-size: 14px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s;
-            box-shadow: 0 4px 14px rgba(102, 126, 234, 0.4);
         }
         .button-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.5);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
         }
         .button-secondary {
-            padding: 12px 24px;
+            padding: 10px 20px;
             background: white;
             color: #667eea;
             border: 2px solid #667eea;
-            border-radius: 10px;
+            border-radius: 8px;
             font-size: 14px;
+            font-weight: 700;
             cursor: pointer;
-            font-weight: 600;
             transition: all 0.2s;
         }
         .button-secondary:hover {
-            background: #667eea;
-            color: white;
+            background: #f7fafc;
         }
-        .ai-insight {
-            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
-            border: 2px solid #22c55e;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .ai-insight h4 {
-            font-size: 16px;
-            font-weight: 700;
-            color: #166534;
-            margin-bottom: 12px;
-        }
-        .ai-insight ul {
-            margin-left: 20px;
+        .button-danger {
+            padding: 10px 20px;
+            background: white;
+            color: #dc2626;
+            border: 2px solid #dc2626;
+            border-radius: 8px;
             font-size: 14px;
-            color: #166534;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
         }
-        .ai-insight li {
-            margin-bottom: 6px;
+        .button-danger:hover {
+            background: #fef2f2;
         }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #718096;
+        }
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+        .empty-state-text {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 16px;
+            color: #718096;
+        }
+        
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
-            top: 0;
+            z-index: 1000;
             left: 0;
+            top: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            z-index: 1000;
-            backdrop-filter: blur(4px);
+            background: rgba(0, 0, 0, 0.5);
+            overflow-y: auto;
+        }
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
         .modal-content {
             background: white;
-            max-width: 900px;
-            margin: 40px auto;
-            border-radius: 20px;
-            max-height: 85vh;
+            border-radius: 16px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 90vh;
             overflow-y: auto;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
         .modal-header {
-            padding: 28px 32px;
-            border-bottom: 1px solid #e2e8f0;
+            padding: 24px;
+            border-bottom: 2px solid #e2e8f0;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 20px 20px 0 0;
         }
         .modal-title {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 700;
-            color: white;
-        }
-        .modal-body {
-            padding: 32px;
+            color: #1a202c;
         }
         .close-btn {
-            cursor: pointer;
             font-size: 32px;
-            color: white;
-            border: none;
+            font-weight: 300;
+            color: #718096;
             background: none;
+            border: none;
+            cursor: pointer;
             line-height: 1;
-            opacity: 0.9;
         }
         .close-btn:hover {
-            opacity: 1;
-        }
-        .info-box {
-            background: #f7fafc;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .info-box h4 {
-            font-size: 16px;
-            font-weight: 700;
             color: #1a202c;
-            margin-bottom: 12px;
         }
-        .info-box p {
-            font-size: 14px;
-            color: #4a5568;
-            line-height: 1.6;
-            margin-bottom: 6px;
+        .modal-body {
+            padding: 24px;
         }
-        .form-group {
+        .info-group {
             margin-bottom: 24px;
         }
-        label {
-            display: block;
-            color: #1a202c;
-            font-size: 14px;
+        .info-label {
+            font-size: 13px;
             font-weight: 700;
-            margin-bottom: 10px;
+            color: #718096;
+            text-transform: uppercase;
+            margin-bottom: 8px;
         }
-        textarea, input[type="text"] {
-            width: 100%;
-            padding: 14px;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
+        .info-value {
             font-size: 15px;
-            font-family: inherit;
-            resize: vertical;
-            background: #f7fafc;
-            transition: all 0.2s;
+            color: #1a202c;
+            line-height: 1.6;
         }
-        textarea {
-            min-height: 120px;
-        }
-        textarea:focus, input:focus {
-            outline: none;
-            border-color: #667eea;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-        .two-column {
+        .profile-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 16px;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>HealthCare AI - Doctor Portal</h1>
+        <div class="header-left">
+            <div class="logo">K</div>
+            <h1>Doctor Dashboard</h1>
+        </div>
         <div class="user-info">
-            <span>👨‍⚕️ Dr. Priya Nair</span>
-            <span class="logout" onclick="window.location.href='login.html'">Logout</span>
+            <span class="user-name" id="doctorName">Loading...</span>
+            <a class="logout" onclick="logout()">Logout</a>
         </div>
     </div>
 
     <div class="main-content">
-        <!-- Statistics Cards -->
-        <div class="stats-bar">
-            <div class="stat-card">
-                <div class="stat-value">12</div>
-                <div class="stat-label">Appointments Today</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">3</div>
-                <div class="stat-label">New Symptom Entries</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">2</div>
-                <div class="stat-label">Pending Confirmations</div>
-            </div>
+        <!-- Loading State -->
+        <div class="loading" id="loadingState">
+            Loading dashboard...
         </div>
 
-        <!-- Tabs -->
-        <div class="tabs">
-            <div class="tab active" onclick="switchTab('appointments')">📅 Appointments</div>
-            <div class="tab" onclick="switchTab('symptoms')">🤖 New Symptoms</div>
-            <div class="tab" onclick="switchTab('notifications')">🔔 Notifications</div>
-        </div>
-
-        <!-- Appointments Section -->
-        <div id="appointmentsSection" class="section">
-            <div class="section-header">
-                <div class="section-title">Today's Appointments</div>
-                <div class="section-subtitle">Manage your scheduled consultations</div>
+        <!-- Main Content -->
+        <div id="mainContent" style="display: none;">
+            <!-- Stats Bar -->
+            <div class="stats-bar">
+                <div class="stat-card">
+                    <div class="stat-value" id="statPending">0</div>
+                    <div class="stat-label">Pending Appointments</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statToday">0</div>
+                    <div class="stat-label">Today's Schedule</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statCompleted">0</div>
+                    <div class="stat-label">Completed This Week</div>
+                </div>
             </div>
 
-            <div class="patient-card" onclick="openPatientModal('Alex Johnson')">
-                <div class="patient-header">
+            <!-- Pending Appointments -->
+            <div class="section">
+                <div class="section-header">
                     <div>
-                        <div class="patient-name">Alex Johnson</div>
-                        <div class="patient-meta">⏰ 04:15 PM • 🎥 Video Consultation</div>
-                        <div class="patient-meta">👤 29 years old • Male • Respiratory Issue</div>
-                    </div>
-                    <span class="status-badge status-accepted">Confirmed</span>
-                </div>
-                <div class="symptoms-preview">
-                    <strong>Current Symptoms:</strong> Dry cough, mild chest tightness, sore throat for 3 days
-                </div>
-                <div class="action-buttons">
-                    <button class="button-primary">View Full Details</button>
-                    <button class="button-secondary">Reschedule</button>
-                </div>
-            </div>
-
-            <div class="patient-card">
-                <div class="patient-header">
-                    <div>
-                        <div class="patient-name">Maria Gomez</div>
-                        <div class="patient-meta">⏰ 04:45 PM • 👤 In-person Visit</div>
-                        <div class="patient-meta">👤 45 years old • Female • Follow-up</div>
-                    </div>
-                    <span class="status-badge status-pending">Pending</span>
-                </div>
-                <div class="symptoms-preview">
-                    <strong>Visit Type:</strong> Post-treatment follow-up for hypertension management
-                </div>
-                <div class="action-buttons">
-                    <button class="button-primary">Accept Appointment</button>
-                    <button class="button-secondary">Decline</button>
-                </div>
-            </div>
-
-            <div class="patient-card">
-                <div class="patient-header">
-                    <div>
-                        <div class="patient-name">Robert Chen</div>
-                        <div class="patient-meta">⏰ 05:30 PM • 🎥 Video Consultation</div>
-                        <div class="patient-meta">👤 52 years old • Male • General Consultation</div>
-                    </div>
-                    <span class="status-badge status-accepted">Confirmed</span>
-                </div>
-                <div class="symptoms-preview">
-                    <strong>Current Symptoms:</strong> Persistent headache and fatigue for over a week
-                </div>
-                <div class="action-buttons">
-                    <button class="button-primary">View Full Details</button>
-                    <button class="button-secondary">Send Message</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- New Symptoms Section -->
-        <div id="symptomsSection" class="section" style="display: none;">
-            <div class="section-header">
-                <div class="section-title">New Symptom Entries</div>
-                <div class="section-subtitle">Smart health analysis awaiting your review</div>
-            </div>
-
-            <div class="patient-card">
-                <div class="patient-header">
-                    <div>
-                        <div class="patient-name">Sarah Williams</div>
-                        <div class="patient-meta">📅 Submitted 15 minutes ago</div>
+                        <div class="section-title">Pending Appointments</div>
+                        <div class="section-subtitle">Review and approve new requests</div>
                     </div>
                 </div>
-                <div class="symptoms-preview">
-                    <strong>Symptoms:</strong> Sharp abdominal pain, nausea, fever (38.5°C)
-                </div>
-                <div class="ai-insight">
-                    <h4>🤖 Smart Health Analysis</h4>
-                    <ul>
-                        <li><strong>Suspected Condition:</strong> Acute gastroenteritis or possible appendicitis</li>
-                        <li><strong>Urgency Level:</strong> Moderate-High (requires prompt attention)</li>
-                        <li><strong>Recommended Specialty:</strong> Gastroenterology / Emergency Medicine</li>
-                        <li><strong>Confidence Score:</strong> 87%</li>
-                    </ul>
-                </div>
-                <div class="action-buttons">
-                    <button class="button-primary">Review & Assign Appointment</button>
-                    <button class="button-secondary">Mark as Urgent</button>
-                </div>
+                <div id="pendingAppointments"></div>
             </div>
 
-            <div class="patient-card">
-                <div class="patient-header">
+            <!-- Today's Queue -->
+            <div class="section">
+                <div class="section-header">
                     <div>
-                        <div class="patient-name">David Park</div>
-                        <div class="patient-meta">📅 Submitted 1 hour ago</div>
+                        <div class="section-title">Today's Schedule</div>
+                        <div class="section-subtitle">Your confirmed appointments for today</div>
                     </div>
                 </div>
-                <div class="symptoms-preview">
-                    <strong>Symptoms:</strong> Skin rash on arms and legs, itching, slight swelling
-                </div>
-                <div class="ai-insight">
-                    <h4>🤖 AI Triage Assessment</h4>
-                    <ul>
-                        <li><strong>Suspected Condition:</strong> Allergic reaction or contact dermatitis</li>
-                        <li><strong>Urgency Level:</strong> Low-Moderate</li>
-                        <li><strong>Recommended Specialty:</strong> Dermatology or General Medicine</li>
-                        <li><strong>Confidence Score:</strong> 92%</li>
-                    </ul>
-                </div>
-                <div class="action-buttons">
-                    <button class="button-primary">Review & Assign Appointment</button>
-                    <button class="button-secondary">Request More Info</button>
-                </div>
+                <div id="todayAppointments"></div>
             </div>
         </div>
     </div>
@@ -518,107 +412,409 @@
     <div id="patientModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-title">Patient Consultation</div>
-                <button class="close-btn" onclick="closePatientModal()">×</button>
+                <div class="modal-title">Patient Details</div>
+                <button class="close-btn" onclick="closePatientModal()">&times;</button>
             </div>
-            <div class="modal-body">
-                <div class="info-box">
-                    <h4>👤 Patient Information</h4>
-                    <p><strong>Name:</strong> <span id="patientName"></span></p>
-                    <p><strong>Age & Gender:</strong> 29 years old • Male</p>
-                    <p><strong>Appointment:</strong> Wednesday, July 10, 2025 at 04:15 PM • Video Consultation</p>
-                </div>
-
-                <div class="info-box">
-                    <h4>🩺 Current Symptoms</h4>
-                    <p>Dry cough, mild chest tightness, sore throat</p>
-                    <p><strong>Duration:</strong> 3 days</p>
-                    <p><strong>Severity:</strong> Moderate</p>
-                    <p><strong>Body Area:</strong> Chest, throat</p>
-                </div>
-
-                <div class="ai-insight">
-                    <h4>🤖 Smart Health Analysis</h4>
-                    <ul>
-                        <li><strong>Likely Diagnosis:</strong> Respiratory infection (92% confidence)</li>
-                        <li><strong>Emergency Signs:</strong> None detected</li>
-                        <li><strong>Recommended Action:</strong> General Medicine consultation appropriate</li>
-                        <li><strong>Suggested Tests:</strong> Consider chest X-ray if symptoms persist</li>
-                    </ul>
-                </div>
-
-                <div class="info-box">
-                    <h4>📋 Medical History</h4>
-                    <p><strong>Known Conditions:</strong> Asthma (childhood - mild)</p>
-                    <p><strong>Allergies:</strong> None reported</p>
-                    <p><strong>Smoking Status:</strong> Non-smoker</p>
-                    <p><strong>Last Visit:</strong> Annual physical examination on May 12, 2025</p>
-                </div>
-
-                <div class="two-column">
-                    <div class="form-group">
-                        <label>Diagnosis</label>
-                        <input type="text" id="diagnosis" placeholder="e.g., Mild upper respiratory infection">
-                    </div>
-                    <div class="form-group">
-                        <label>Follow-up Required</label>
-                        <input type="text" id="followup" placeholder="e.g., 5 days if no improvement">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Prescription & Medication</label>
-                    <textarea id="prescription" placeholder="Enter medication names, dosages, and instructions..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>Consultation Notes</label>
-                    <textarea id="visitNotes" placeholder="Document your observations, recommendations, and any warnings discussed..."></textarea>
-                </div>
-
-                <button class="button-primary" onclick="saveConsultation()" style="width: 100%;">💾 Save & Share with Patient</button>
+            <div class="modal-body" id="modalBody">
+                <!-- Content loaded dynamically -->
             </div>
         </div>
     </div>
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
     <script>
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            event.target.classList.add('active');
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBNYwM7ySCuyog04dJrWugBig41qh2Pu4U",
+            authDomain: "kantan-d6e74.firebaseapp.com",
+            projectId: "kantan-d6e74",
+            storageBucket: "kantan-d6e74.firebasestorage.app",
+            messagingSenderId: "199639000224",
+            appId: "1:199639000224:web:662872c3eeb09b24e555c5",
+            measurementId: "G-658L3RPXFZ"
+        };
 
-            document.getElementById('appointmentsSection').style.display = 'none';
-            document.getElementById('symptomsSection').style.display = 'none';
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
 
-            if (tabName === 'appointments') {
-                document.getElementById('appointmentsSection').style.display = 'block';
-            } else if (tabName === 'symptoms') {
-                document.getElementById('symptomsSection').style.display = 'block';
-            }
-        }
+        let currentDoctor = null;
+        let doctorData = null;
 
-        function openPatientModal(patientName) {
-            document.getElementById('patientName').textContent = patientName;
-            document.getElementById('patientModal').style.display = 'block';
-        }
-
-        function closePatientModal() {
-            document.getElementById('patientModal').style.display = 'none';
-        }
-
-        function saveConsultation() {
-            const diagnosis = document.getElementById('diagnosis').value;
-            const prescription = document.getElementById('prescription').value;
-            const notes = document.getElementById('visitNotes').value;
-
-            if (!diagnosis || !prescription || !notes) {
-                alert('⚠️ Please fill in all required fields before saving');
+        // Check authentication
+        auth.onAuthStateChanged(async (user) => {
+            if (!user) {
+                window.location.href = 'login.html';
                 return;
             }
 
-            alert('✅ Consultation saved successfully!\n\n📧 Patient has been notified and can view the updated diagnosis in their medical records.');
-            closePatientModal();
+            currentDoctor = user;
+
+            try {
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                
+                if (!userDoc.exists) {
+                    alert('User profile not found.');
+                    await auth.signOut();
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                doctorData = userDoc.data();
+
+                if (doctorData.role !== 'doctor') {
+                    alert('Access denied. This dashboard is for doctors only.');
+                    await auth.signOut();
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                // Display doctor info
+                document.getElementById('doctorName').textContent = doctorData.fullName || 'Doctor';
+
+                // Load appointments
+                loadDashboard();
+
+            } catch (error) {
+                console.error('Error loading doctor data:', error);
+                document.getElementById('loadingState').innerHTML = 
+                    '<div style="color: #dc2626;">Failed to load dashboard. Please refresh.</div>';
+            }
+        });
+
+        // Load dashboard data
+        async function loadDashboard() {
+            try {
+                // Hide loading, show content
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+
+                // Load stats and appointments
+                await Promise.all([
+                    loadStats(),
+                    loadPendingAppointments(),
+                    loadTodayAppointments()
+                ]);
+
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+            }
         }
 
+        // Load statistics
+        async function loadStats() {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            const weekAgo = new Date();
+            weekAgo.setDate(weekAgo.getDate() - 7);
+            weekAgo.setHours(0, 0, 0, 0);
+
+            try {
+                // Pending count
+                const pendingSnapshot = await db.collection('appointments')
+                    .where('doctorId', '==', currentDoctor.uid)
+                    .where('status', '==', 'pending')
+                    .get();
+                document.getElementById('statPending').textContent = pendingSnapshot.size;
+
+                // Today's count
+                const todaySnapshot = await db.collection('appointments')
+                    .where('doctorId', '==', currentDoctor.uid)
+                    .where('date', '==', formatDate(new Date()))
+                    .where('status', 'in', ['confirmed', 'in-progress'])
+                    .get();
+                document.getElementById('statToday').textContent = todaySnapshot.size;
+
+                // Completed this week
+                const completedSnapshot = await db.collection('appointments')
+                    .where('doctorId', '==', currentDoctor.uid)
+                    .where('status', '==', 'completed')
+                    .get();
+                
+                let completedThisWeek = 0;
+                completedSnapshot.forEach(doc => {
+                    const data = doc.data();
+                    if (data.completedAt && data.completedAt.toDate() >= weekAgo) {
+                        completedThisWeek++;
+                    }
+                });
+                document.getElementById('statCompleted').textContent = completedThisWeek;
+
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        // Load pending appointments (real-time)
+        function loadPendingAppointments() {
+            const container = document.getElementById('pendingAppointments');
+            
+            db.collection('appointments')
+                .where('doctorId', '==', currentDoctor.uid)
+                .where('status', '==', 'pending')
+                .orderBy('createdAt', 'desc')
+                .onSnapshot((snapshot) => {
+                    if (snapshot.empty) {
+                        container.innerHTML = `
+                            <div class="empty-state">
+                                <div class="empty-state-icon">📋</div>
+                                <div class="empty-state-text">No pending appointments</div>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    container.innerHTML = '';
+                    snapshot.forEach((doc) => {
+                        const appointment = doc.data();
+                        container.innerHTML += renderAppointmentCard(doc.id, appointment, 'pending');
+                    });
+                });
+        }
+
+        // Load today's appointments (real-time)
+        function loadTodayAppointments() {
+            const container = document.getElementById('todayAppointments');
+            const today = formatDate(new Date());
+            
+            db.collection('appointments')
+                .where('doctorId', '==', currentDoctor.uid)
+                .where('date', '==', today)
+                .where('status', 'in', ['confirmed', 'in-progress'])
+                .orderBy('time', 'asc')
+                .onSnapshot((snapshot) => {
+                    if (snapshot.empty) {
+                        container.innerHTML = `
+                            <div class="empty-state">
+                                <div class="empty-state-icon">📅</div>
+                                <div class="empty-state-text">No appointments scheduled for today</div>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    container.innerHTML = '';
+                    snapshot.forEach((doc) => {
+                        const appointment = doc.data();
+                        container.innerHTML += renderAppointmentCard(doc.id, appointment, 'today');
+                    });
+                });
+        }
+
+        // Render appointment card
+        function renderAppointmentCard(id, appointment, type) {
+            const statusClass = `status-${appointment.status}`;
+            const statusText = appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1);
+
+            let actions = '';
+            if (type === 'pending') {
+                actions = `
+                    <div class="action-buttons">
+                        <button class="button-primary" onclick="approveAppointment('${id}')">✓ Approve</button>
+                        <button class="button-secondary" onclick="viewPatientDetails('${id}')">View Details</button>
+                        <button class="button-danger" onclick="rejectAppointment('${id}')">✗ Reject</button>
+                    </div>
+                `;
+            } else if (type === 'today') {
+                actions = `
+                    <div class="action-buttons">
+                        <button class="button-primary" onclick="completeAppointment('${id}')">Complete Consultation</button>
+                        <button class="button-secondary" onclick="viewPatientDetails('${id}')">View Details</button>
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="appointment-card">
+                    <div class="appointment-header">
+                        <div class="patient-info">
+                            <h3>${appointment.patientName} (${appointment.patientAge || '?'}${appointment.patientGender ? appointment.patientGender.charAt(0).toUpperCase() : ''})</h3>
+                            <div class="patient-meta">📅 ${formatDateDisplay(appointment.date)} at ${appointment.time}</div>
+                            <div class="patient-meta">🎥 ${appointment.type === 'video' ? 'Video Call' : 'In-Person'}</div>
+                        </div>
+                        <span class="status-badge ${statusClass}">${statusText}</span>
+                    </div>
+                    
+                    <div class="symptoms-preview">
+                        <div class="symptoms-title">Reported Symptoms</div>
+                        <div class="symptoms-text">${appointment.symptoms || 'No symptoms provided'}</div>
+                    </div>
+                    
+                    ${actions}
+                </div>
+            `;
+        }
+
+        // Approve appointment
+        async function approveAppointment(appointmentId) {
+            if (!confirm('Approve this appointment?')) return;
+
+            try {
+                await db.collection('appointments').doc(appointmentId).update({
+                    status: 'confirmed',
+                    confirmedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                alert('✅ Appointment approved!');
+                loadStats(); // Refresh stats
+            } catch (error) {
+                console.error('Error approving appointment:', error);
+                alert('Failed to approve appointment. Please try again.');
+            }
+        }
+
+        // Reject appointment
+        async function rejectAppointment(appointmentId) {
+            const reason = prompt('Reason for rejection (optional):');
+            
+            try {
+                await db.collection('appointments').doc(appointmentId).update({
+                    status: 'rejected',
+                    rejectionReason: reason || 'No reason provided',
+                    rejectedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                alert('Appointment rejected.');
+                loadStats();
+            } catch (error) {
+                console.error('Error rejecting appointment:', error);
+                alert('Failed to reject appointment. Please try again.');
+            }
+        }
+
+        // Complete appointment
+        async function completeAppointment(appointmentId) {
+            const notes = prompt('Add consultation notes (optional):');
+            
+            try {
+                await db.collection('appointments').doc(appointmentId).update({
+                    status: 'completed',
+                    doctorNotes: notes || '',
+                    completedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                alert('✅ Consultation marked as complete!');
+                loadStats();
+            } catch (error) {
+                console.error('Error completing appointment:', error);
+                alert('Failed to complete appointment. Please try again.');
+            }
+        }
+
+        // View patient details
+        async function viewPatientDetails(appointmentId) {
+            try {
+                const appointmentDoc = await db.collection('appointments').doc(appointmentId).get();
+                const appointment = appointmentDoc.data();
+                
+                const patientDoc = await db.collection('users').doc(appointment.patientId).get();
+                const patient = patientDoc.data();
+
+                const modalBody = document.getElementById('modalBody');
+                modalBody.innerHTML = `
+                    <div class="profile-grid">
+                        <div class="info-group">
+                            <div class="info-label">Full Name</div>
+                            <div class="info-value">${patient.fullName}</div>
+                        </div>
+                        <div class="info-group">
+                            <div class="info-label">Email</div>
+                            <div class="info-value">${patient.email}</div>
+                        </div>
+                        <div class="info-group">
+                            <div class="info-label">Age</div>
+                            <div class="info-value">${patient.age || 'Not provided'}</div>
+                        </div>
+                        <div class="info-group">
+                            <div class="info-label">Gender</div>
+                            <div class="info-value">${patient.gender || 'Not provided'}</div>
+                        </div>
+                        <div class="info-group">
+                            <div class="info-label">Blood Type</div>
+                            <div class="info-value">${patient.bloodType || 'Not provided'}</div>
+                        </div>
+                        <div class="info-group">
+                            <div class="info-label">Weight</div>
+                            <div class="info-value">${patient.weight ? patient.weight + ' kg' : 'Not provided'}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-group">
+                        <div class="info-label">🛡️ Allergies</div>
+                        <div class="info-value">${patient.allergies || 'None reported'}</div>
+                    </div>
+                    
+                    <div class="info-group">
+                        <div class="info-label">💊 Current Medications</div>
+                        <div class="info-value">${patient.currentMedications || 'None reported'}</div>
+                    </div>
+                    
+                    <div class="info-group">
+                        <div class="info-label">📋 Chronic Conditions</div>
+                        <div class="info-value">${patient.chronicConditions || 'None reported'}</div>
+                    </div>
+                    
+                    <div class="info-group">
+                        <div class="info-label">📝 Current Symptoms</div>
+                        <div class="info-value">${appointment.symptoms || 'No symptoms provided'}</div>
+                    </div>
+                    
+                    <div class="info-group">
+                        <div class="info-label">📅 Appointment</div>
+                        <div class="info-value">${formatDateDisplay(appointment.date)} at ${appointment.time}</div>
+                    </div>
+                `;
+
+                document.getElementById('patientModal').classList.add('show');
+            } catch (error) {
+                console.error('Error loading patient details:', error);
+                alert('Failed to load patient details.');
+            }
+        }
+
+        // Close patient modal
+        function closePatientModal() {
+            document.getElementById('patientModal').classList.remove('show');
+        }
+
+        // Logout
+        async function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                try {
+                    await auth.signOut();
+                    window.location.href = 'login.html';
+                } catch (error) {
+                    console.error('Logout error:', error);
+                    alert('Failed to logout. Please try again.');
+                }
+            }
+        }
+
+        // Helper: Format date for storage (YYYY-MM-DD)
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        // Helper: Format date for display
+        function formatDateDisplay(dateStr) {
+            const date = new Date(dateStr);
+            const options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        // Close modal when clicking outside
         window.onclick = function(event) {
             const modal = document.getElementById('patientModal');
             if (event.target == modal) {
