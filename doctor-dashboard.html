@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #f8fafc;
+            color: #1a202c;
+        }
+        .header {
+            background: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 20px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header h1 {
+            font-size: 22px;
+            color: #1a202c;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 14px;
+            color: #4a5568;
+            font-weight: 600;
+        }
+        .logout {
+            color: #667eea;
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+        .logout:hover {
+            color: #764ba2;
+        }
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px;
+        }
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #667eea;
+            transition: all 0.3s;
+        }
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
+        }
+        .stat-card:nth-child(2) {
+            border-left-color: #f59e0b;
+        }
+        .stat-card:nth-child(3) {
+            border-left-color: #22c55e;
+        }
+        .stat-value {
+            font-size: 36px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #718096;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .tabs {
+            background: white;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            gap: 4px;
+            padding: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .tab {
+            padding: 12px 28px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #718096;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .tab:hover {
+            background: #f7fafc;
+            color: #4a5568;
+        }
+        .tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .section {
+            background: white;
+            border-radius: 0 0 16px 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .section-header {
+            margin-bottom: 28px;
+        }
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 8px;
+        }
+        .section-subtitle {
+            font-size: 14px;
+            color: #718096;
+        }
+        .patient-card {
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            background: linear-gradient(to right, #ffffff 0%, #f7fafc 100%);
+        }
+        .patient-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
+            transform: translateY(-2px);
+        }
+        .patient-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+        .patient-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 8px;
+        }
+        .patient-meta {
+            font-size: 14px;
+            color: #718096;
+            margin-bottom: 4px;
+        }
+        .status-badge {
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: 700;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .status-accepted {
+            color: #22c55e;
+            background: #dcfce7;
+        }
+        .status-pending {
+            color: #f59e0b;
+            background: #fef3c7;
+        }
+        .symptoms-preview {
+            background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%);
+            padding: 16px;
+            font-size: 14px;
+            color: #1a202c;
+            border-left: 4px solid #667eea;
+            margin-bottom: 16px;
+            border-radius: 8px;
+        }
+        .symptoms-preview strong {
+            color: #667eea;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+        .button-primary {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 14px rgba(102, 126, 234, 0.4);
+        }
+        .button-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.5);
+        }
+        .button-secondary {
+            padding: 12px 24px;
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .button-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+        .ai-insight {
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+            border: 2px solid #22c55e;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .ai-insight h4 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #166534;
+            margin-bottom: 12px;
+        }
+        .ai-insight ul {
+            margin-left: 20px;
+            font-size: 14px;
+            color: #166534;
+        }
+        .ai-insight li {
+            margin-bottom: 6px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+        .modal-content {
+            background: white;
+            max-width: 900px;
+            margin: 40px auto;
+            border-radius: 20px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        .modal-header {
+            padding: 28px 32px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px 20px 0 0;
+        }
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+        }
+        .modal-body {
+            padding: 32px;
+        }
+        .close-btn {
+            cursor: pointer;
+            font-size: 32px;
+            color: white;
+            border: none;
+            background: none;
+            line-height: 1;
+            opacity: 0.9;
+        }
+        .close-btn:hover {
+            opacity: 1;
+        }
+        .info-box {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .info-box h4 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 12px;
+        }
+        .info-box p {
+            font-size: 14px;
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+        .form-group {
+            margin-bottom: 24px;
+        }
+        label {
+            display: block;
+            color: #1a202c;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        textarea, input[type="text"] {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: inherit;
+            resize: vertical;
+            background: #f7fafc;
+            transition: all 0.2s;
+        }
+        textarea {
+            min-height: 120px;
+        }
+        textarea:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>HealthCare AI - Doctor Portal</h1>
+        <div class="user-info">
+            <span>👨‍⚕️ Dr. Priya Nair</span>
+            <span class="logout" onclick="window.location.href='login.html'">Logout</span>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <!-- Statistics Cards -->
+        <div class="stats-bar">
+            <div class="stat-card">
+                <div class="stat-value">12</div>
+                <div class="stat-label">Appointments Today</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">3</div>
+                <div class="stat-label">New Symptom Entries</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">2</div>
+                <div class="stat-label">Pending Confirmations</div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('appointments')">📅 Appointments</div>
+            <div class="tab" onclick="switchTab('symptoms')">🤖 New Symptoms</div>
+            <div class="tab" onclick="switchTab('notifications')">🔔 Notifications</div>
+        </div>
+
+        <!-- Appointments Section -->
+        <div id="appointmentsSection" class="section">
+            <div class="section-header">
+                <div class="section-title">Today's Appointments</div>
+                <div class="section-subtitle">Manage your scheduled consultations</div>
+            </div>
+
+            <div class="patient-card" onclick="openPatientModal('Alex Johnson')">
+                <div class="patient-header">
+                    <div>
+                        <div class="patient-name">Alex Johnson</div>
+                        <div class="patient-meta">⏰ 04:15 PM • 🎥 Video Consultation</div>
+                        <div class="patient-meta">👤 29 years old • Male • Respiratory Issue</div>
+                    </div>
+                    <span class="status-badge status-accepted">Confirmed</span>
+                </div>
+                <div class="symptoms-preview">
+                    <strong>Current Symptoms:</strong> Dry cough, mild chest tightness, sore throat for 3 days
+                </div>
+                <div class="action-buttons">
+                    <button class="button-primary">View Full Details</button>
+                    <button class="button-secondary">Reschedule</button>
+                </div>
+            </div>
+
+            <div class="patient-card">
+                <div class="patient-header">
+                    <div>
+                        <div class="patient-name">Maria Gomez</div>
+                        <div class="patient-meta">⏰ 04:45 PM • 👤 In-person Visit</div>
+                        <div class="patient-meta">👤 45 years old • Female • Follow-up</div>
+                    </div>
+                    <span class="status-badge status-pending">Pending</span>
+                </div>
+                <div class="symptoms-preview">
+                    <strong>Visit Type:</strong> Post-treatment follow-up for hypertension management
+                </div>
+                <div class="action-buttons">
+                    <button class="button-primary">Accept Appointment</button>
+                    <button class="button-secondary">Decline</button>
+                </div>
+            </div>
+
+            <div class="patient-card">
+                <div class="patient-header">
+                    <div>
+                        <div class="patient-name">Robert Chen</div>
+                        <div class="patient-meta">⏰ 05:30 PM • 🎥 Video Consultation</div>
+                        <div class="patient-meta">👤 52 years old • Male • General Consultation</div>
+                    </div>
+                    <span class="status-badge status-accepted">Confirmed</span>
+                </div>
+                <div class="symptoms-preview">
+                    <strong>Current Symptoms:</strong> Persistent headache and fatigue for over a week
+                </div>
+                <div class="action-buttons">
+                    <button class="button-primary">View Full Details</button>
+                    <button class="button-secondary">Send Message</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- New Symptoms Section -->
+        <div id="symptomsSection" class="section" style="display: none;">
+            <div class="section-header">
+                <div class="section-title">New Symptom Entries</div>
+                <div class="section-subtitle">Smart health analysis awaiting your review</div>
+            </div>
+
+            <div class="patient-card">
+                <div class="patient-header">
+                    <div>
+                        <div class="patient-name">Sarah Williams</div>
+                        <div class="patient-meta">📅 Submitted 15 minutes ago</div>
+                    </div>
+                </div>
+                <div class="symptoms-preview">
+                    <strong>Symptoms:</strong> Sharp abdominal pain, nausea, fever (38.5°C)
+                </div>
+                <div class="ai-insight">
+                    <h4>🤖 Smart Health Analysis</h4>
+                    <ul>
+                        <li><strong>Suspected Condition:</strong> Acute gastroenteritis or possible appendicitis</li>
+                        <li><strong>Urgency Level:</strong> Moderate-High (requires prompt attention)</li>
+                        <li><strong>Recommended Specialty:</strong> Gastroenterology / Emergency Medicine</li>
+                        <li><strong>Confidence Score:</strong> 87%</li>
+                    </ul>
+                </div>
+                <div class="action-buttons">
+                    <button class="button-primary">Review & Assign Appointment</button>
+                    <button class="button-secondary">Mark as Urgent</button>
+                </div>
+            </div>
+
+            <div class="patient-card">
+                <div class="patient-header">
+                    <div>
+                        <div class="patient-name">David Park</div>
+                        <div class="patient-meta">📅 Submitted 1 hour ago</div>
+                    </div>
+                </div>
+                <div class="symptoms-preview">
+                    <strong>Symptoms:</strong> Skin rash on arms and legs, itching, slight swelling
+                </div>
+                <div class="ai-insight">
+                    <h4>🤖 AI Triage Assessment</h4>
+                    <ul>
+                        <li><strong>Suspected Condition:</strong> Allergic reaction or contact dermatitis</li>
+                        <li><strong>Urgency Level:</strong> Low-Moderate</li>
+                        <li><strong>Recommended Specialty:</strong> Dermatology or General Medicine</li>
+                        <li><strong>Confidence Score:</strong> 92%</li>
+                    </ul>
+                </div>
+                <div class="action-buttons">
+                    <button class="button-primary">Review & Assign Appointment</button>
+                    <button class="button-secondary">Request More Info</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Patient Detail Modal -->
+    <div id="patientModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Patient Consultation</div>
+                <button class="close-btn" onclick="closePatientModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="info-box">
+                    <h4>👤 Patient Information</h4>
+                    <p><strong>Name:</strong> <span id="patientName"></span></p>
+                    <p><strong>Age & Gender:</strong> 29 years old • Male</p>
+                    <p><strong>Appointment:</strong> Wednesday, July 10, 2025 at 04:15 PM • Video Consultation</p>
+                </div>
+
+                <div class="info-box">
+                    <h4>🩺 Current Symptoms</h4>
+                    <p>Dry cough, mild chest tightness, sore throat</p>
+                    <p><strong>Duration:</strong> 3 days</p>
+                    <p><strong>Severity:</strong> Moderate</p>
+                    <p><strong>Body Area:</strong> Chest, throat</p>
+                </div>
+
+                <div class="ai-insight">
+                    <h4>🤖 Smart Health Analysis</h4>
+                    <ul>
+                        <li><strong>Likely Diagnosis:</strong> Respiratory infection (92% confidence)</li>
+                        <li><strong>Emergency Signs:</strong> None detected</li>
+                        <li><strong>Recommended Action:</strong> General Medicine consultation appropriate</li>
+                        <li><strong>Suggested Tests:</strong> Consider chest X-ray if symptoms persist</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <h4>📋 Medical History</h4>
+                    <p><strong>Known Conditions:</strong> Asthma (childhood - mild)</p>
+                    <p><strong>Allergies:</strong> None reported</p>
+                    <p><strong>Smoking Status:</strong> Non-smoker</p>
+                    <p><strong>Last Visit:</strong> Annual physical examination on May 12, 2025</p>
+                </div>
+
+                <div class="two-column">
+                    <div class="form-group">
+                        <label>Diagnosis</label>
+                        <input type="text" id="diagnosis" placeholder="e.g., Mild upper respiratory infection">
+                    </div>
+                    <div class="form-group">
+                        <label>Follow-up Required</label>
+                        <input type="text" id="followup" placeholder="e.g., 5 days if no improvement">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Prescription & Medication</label>
+                    <textarea id="prescription" placeholder="Enter medication names, dosages, and instructions..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Consultation Notes</label>
+                    <textarea id="visitNotes" placeholder="Document your observations, recommendations, and any warnings discussed..."></textarea>
+                </div>
+
+                <button class="button-primary" onclick="saveConsultation()" style="width: 100%;">💾 Save & Share with Patient</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.getElementById('appointmentsSection').style.display = 'none';
+            document.getElementById('symptomsSection').style.display = 'none';
+
+            if (tabName === 'appointments') {
+                document.getElementById('appointmentsSection').style.display = 'block';
+            } else if (tabName === 'symptoms') {
+                document.getElementById('symptomsSection').style.display = 'block';
+            }
+        }
+
+        function openPatientModal(patientName) {
+            document.getElementById('patientName').textContent = patientName;
+            document.getElementById('patientModal').style.display = 'block';
+        }
+
+        function closePatientModal() {
+            document.getElementById('patientModal').style.display = 'none';
+        }
+
+        function saveConsultation() {
+            const diagnosis = document.getElementById('diagnosis').value;
+            const prescription = document.getElementById('prescription').value;
+            const notes = document.getElementById('visitNotes').value;
+
+            if (!diagnosis || !prescription || !notes) {
+                alert('⚠️ Please fill in all required fields before saving');
+                return;
+            }
+
+            alert('✅ Consultation saved successfully!\n\n📧 Patient has been notified and can view the updated diagnosis in their medical records.');
+            closePatientModal();
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('patientModal');
+            if (event.target == modal) {
+                closePatientModal();
+            }
+        }
+    </script>
+</body>
+</html>
